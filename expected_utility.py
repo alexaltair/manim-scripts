@@ -92,7 +92,7 @@ class InitialBoxes(Scene):
             Create(b_box),
             Write(b_box_label),
         )
-        self.wait()
+        # self.wait()
 
         a_box = Group(a_box, a_box_label)
         b_box = Group(b_box, b_box_label)
@@ -121,6 +121,19 @@ class InitialBoxes(Scene):
             h1=1,
         )
 
+        # self.wait()
+
+
+        self.play(Indicate(a_brace_txt1, color=None))
+        self.play(Indicate(a_dollars1, color=None))
+
+        self.play(Indicate(a_brace_txt2, color=None))
+        self.play(Indicate(a_dollars2, color=None))
+
+
+
+        # self.wait()
+
         (
             b_prob_line,
             b_brace1,
@@ -138,6 +151,36 @@ class InitialBoxes(Scene):
             d2="\$0",
             h1=3,
         )
+
+
+        self.play(Indicate(b_brace_txt1, color=None))
+        self.play(Indicate(b_dollars1, color=None))
+
+        self.play(Indicate(b_brace_txt2, color=None))
+        self.play(Indicate(b_dollars2, color=None))
+
+
+        self.play(FadeOut(choice))
+
+        lt = MathTex("<", color=TEXT_COLOR)
+        lt.shift([-3, 2.5, 0])
+        gt = MathTex(">", color=TEXT_COLOR)
+        gt.shift(lt.get_center() + DOWN)
+
+        self.play(
+            a_dollars1.animate.next_to(lt, LEFT),
+            FadeIn(lt),
+            b_dollars1.animate.next_to(lt, RIGHT),
+        )
+
+        self.play(
+            a_brace_txt1.animate.next_to(gt, LEFT),
+            FadeIn(gt),
+            b_brace_txt1.animate.next_to(gt, RIGHT),
+        )
+
+
+
 
 
 
