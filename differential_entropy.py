@@ -6,7 +6,10 @@ Mobject.set_default(color=DARK_GRAY)
 
 class DifferentialEntropy(Scene):
     def construct(self):
-        n = ValueTracker(1)
+        iteration = ValueTracker(0)
+        def current_n():
+            return int(2**iteration.get_value())
+
         x_range_end = 5
 
         ax = Axes(
@@ -30,26 +33,26 @@ class DifferentialEntropy(Scene):
             color=BLUE_C
         )
 
-        def equal_area_rectangles():
+        def equal_area_rectangles(n):
             dx = x_range_end/10000
             rect_x_coords = [0]
             sample = 0
             area = 0
-            for i in range(int(n.get_value())):
-                while area <= (i+1)/int(n.get_value()) and sample+dx < x_range_end:
+            for i in range(int(n)):
+                while area <= (i+1)/int(n) and sample+dx < x_range_end:
                     area += (dx/2)*(some_function(sample) + some_function(sample+dx))
                     sample += dx
 
                 rect_x_coords.append(sample)
 
-            rect_colors = color_gradient([BLUE, GREEN], int(n.get_value()))
+            rect_colors = color_gradient([BLUE, GREEN], int(n))
 
             rectangles = []
-            for i in range(int(n.get_value())):
+            for i in range(int(n)):
                 left = rect_x_coords[i]
                 right = rect_x_coords[i+1]
                 bottom = 0
-                top = 1/(int(n.get_value())*(right - left))
+                top = 1/(int(n)*(right - left))
 
                 new_rect = Polygon(
                     ax.coords_to_point(left, bottom),
@@ -64,10 +67,12 @@ class DifferentialEntropy(Scene):
 
             return VGroup(*rectangles)
 
-        rectangles = always_redraw(equal_area_rectangles)
+        rectangles = always_redraw(
+            lambda: equal_area_rectangles(current_n())
+        )
 
         n_label = always_redraw(
-            lambda: Tex(f"$n = {int(n.get_value())}$").shift(2*UP + 2*RIGHT)
+            lambda: Tex(f"$n = {current_n()}$").shift(2*UP + 2*RIGHT)
         )
 
         self.add(
@@ -78,7 +83,9 @@ class DifferentialEntropy(Scene):
             rectangles,
         )
 
-        self.play(
-            n.animate.set_value(64 + 1),
-            run_time=8,
-        )
+        for i in range(7):
+            self.play(
+                iteration.animate.set_value(i),
+                run_time=0.01,
+            )
+            self.wait()
