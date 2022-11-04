@@ -6,10 +6,6 @@ Mobject.set_default(color=DARK_GRAY)
 
 class DifferentialEntropy(Scene):
     def construct(self):
-        iteration = ValueTracker(0)
-        def current_n():
-            return int(2**iteration.get_value())
-
         x_range_end = 5
 
         ax = Axes(
@@ -17,9 +13,12 @@ class DifferentialEntropy(Scene):
             y_range=[0, 1.2],
         )
 
-        labels = ax.get_axis_labels(
-            y_label='p(x)',
-        )
+        # labels = ax.get_axis_labels(
+        #     y_label='p(x)',
+        # )
+
+        dist_label = Tex("$p(x)$", color=BLUE_C).shift(2*UP + 4*LEFT)
+        entro_label = Tex(r"$\log \frac{1}{p(x)}$", color=RED_C).shift(4*RIGHT)
 
         def some_function(x):
             # return 1
@@ -33,59 +32,54 @@ class DifferentialEntropy(Scene):
             color=BLUE_C
         )
 
-        def equal_area_rectangles(n):
-            dx = x_range_end/10000
-            rect_x_coords = [0]
-            sample = 0
-            area = 0
-            for i in range(int(n)):
-                while area <= (i+1)/int(n) and sample+dx < x_range_end:
-                    area += (dx/2)*(some_function(sample) + some_function(sample+dx))
-                    sample += dx
-
-                rect_x_coords.append(sample)
-
-            rect_colors = color_gradient([BLUE, GREEN], int(n))
-
-            rectangles = []
-            for i in range(int(n)):
-                left = rect_x_coords[i]
-                right = rect_x_coords[i+1]
-                bottom = 0
-                top = 1/(int(n)*(right - left))
-
-                new_rect = Polygon(
-                    ax.coords_to_point(left, bottom),
-                    ax.coords_to_point(left, top),
-                    ax.coords_to_point(right, top),
-                    ax.coords_to_point(right, bottom),
-                )
-                new_rect.stroke_width = 1
-                new_rect.set_fill(rect_colors[i], opacity=0.5)
-                new_rect.set_stroke(GRAY)
-                rectangles.append(new_rect)
-
-            return VGroup(*rectangles)
-
-        rectangles = always_redraw(
-            lambda: equal_area_rectangles(current_n())
-        )
-
-        n_label = always_redraw(
-            lambda: Tex(f"$n = {current_n()}$").shift(2*UP + 2*RIGHT)
+        scale = 0.15
+        diff_entro = ax.plot(
+            lambda x: scale*np.log2(1/some_function(x)),
+            x_range=[0, x_range_end],
+            color=RED_C
         )
 
         self.add(
             ax,
-            labels,
-            n_label,
+            dist_label,
+            entro_label,
             some_function_curve,
-            rectangles,
+            diff_entro,
         )
 
+
+        def equal_area_partitions(n):
+            dx = x_range_end/10000
+            line_positions = [0]
+            sample = 0
+            area = 0
+            for i in range(n):
+                while area <= (i+1)/n and sample+dx < x_range_end:
+                    area += (dx/2)*(some_function(sample) + some_function(sample+dx))
+                    sample += dx
+
+                line_positions.append(sample)
+
+            partitions = []
+            for i in range(n):
+                left = line_positions[i]
+
+                vert_line = ax.get_vertical_line(
+                    ax.input_to_graph_point(left, some_function_curve),
+                    color=GREEN,
+                    line_func=Line,
+                    # line_config={"dashed_ratio": 1},
+                )
+
+                partitions.append(vert_line)
+
+            return VGroup(*partitions)
+
         for i in range(7):
-            self.play(
-                iteration.animate.set_value(i),
-                run_time=0.01,
-            )
+            n = 2**i
+            partitions = equal_area_partitions(n)
+            n_label = Tex(f"$n = {n}$").shift(3*UP)
+
+            self.add(n_label,partitions)
             self.wait()
+            self.remove(n_label,partitions)
