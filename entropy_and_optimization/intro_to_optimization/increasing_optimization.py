@@ -1,18 +1,18 @@
 from manim import *
 import numpy as np
 
-config.pixel_height = 580
-config.background_color = '#dce2e1'
-Mobject.set_default(color='#22323b')
+from optimization_config import *
 
-class BitsOfOptimization(Scene):
+config.pixel_height = 580
+
+class IncreasingOptimization(Scene):
     def construct(self):
-        current_state = ValueTracker(1.15)
+        current_state = ValueTracker(0.001)
 
         ax = Axes(
             x_range=[0, 4],
             y_range=[0, 0.8],
-            # x_axis_config={"numbers_to_include": [current_state]},
+            x_axis_config={"include_ticks": False},
         )
 
         labels = ax.get_axis_labels(
@@ -26,14 +26,14 @@ class BitsOfOptimization(Scene):
             # This is a base 10 log but it's just an arbitrary probability distribution so that doesn't matter
             return np.exp(-(np.log(x) - mu)**2 / (2 * sigma**2)) / (x * sigma * np.sqrt(2 * np.pi))
 
-        lognormal_curve = ax.plot(lambda x: lognormal(x), x_range=[0.01, 4], color='#4c8095')
+        lognormal_curve = ax.plot(lambda x: lognormal(x), x_range=[0.01, 4], color=DARK_BLUE)
 
         def current_area():
             samples, dx = np.linspace(current_state.get_value(), 20, retstep=True)
             return np.trapz(lognormal(samples), dx=dx) + 0.05
 
         area_polygon = always_redraw(
-            lambda: ax.get_area(lognormal_curve, [current_state.get_value(), 4], color=GREY, opacity=0.5)
+            lambda: ax.get_area(lognormal_curve, [current_state.get_value(), 4], color=MEDIUM_BLUE, opacity=0.5)
         )
 
         area_text = always_redraw(
@@ -55,3 +55,23 @@ class BitsOfOptimization(Scene):
             area_text,
             opt_text,
         )
+
+        self.wait()
+
+        self.play(
+            current_state.animate.set_value(1.14),
+            run_time=2,
+        )
+        self.wait()
+
+        self.play(
+            current_state.animate.set_value(2.32),
+            run_time=2,
+        )
+        self.wait()
+
+        self.play(
+            current_state.animate.set_value(4),
+            run_time=2,
+        )
+        self.wait()

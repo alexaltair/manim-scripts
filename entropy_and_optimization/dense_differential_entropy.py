@@ -1,10 +1,9 @@
 from manim import *
 import numpy as np
 
-config.background_color = WHITE
-Mobject.set_default(color=DARK_GRAY)
+from optimization_config import *
 
-class DifferentialEntropy(Scene):
+class DenseDifferentialEntropy(Scene):
     def construct(self):
         x_range_end = 5
 
@@ -39,12 +38,33 @@ class DifferentialEntropy(Scene):
             color=RED_C
         )
 
+
+
+
+
+
+        intersection_x = 1.48
+        intersection_point = [intersection_x, 0.25, 0]
+        intersection_line = Line(
+            start=ax.c2p(*intersection_point),
+            end=ax.c2p(intersection_x, -0.07, 0),
+        )
+        intersection_label = Tex(f'$x = {intersection_x}$', font_size=x_axis_font_size).next_to(intersection_line, 1*DOWN)
+
+
+
+
+
+
+
         self.add(
             ax,
             dist_label,
             entro_label,
             some_function_curve,
             diff_entro,
+            intersection_line,
+            intersection_label,
         )
 
 
