@@ -33,7 +33,12 @@ class IncreasingOptimization(Scene):
             return np.trapz(lognormal(samples), dx=dx) + 0.05
 
         area_polygon = always_redraw(
-            lambda: ax.get_area(lognormal_curve, [current_state.get_value(), 4], color=MEDIUM_BLUE, opacity=0.5)
+            lambda: ax.get_area(
+                lognormal_curve,
+                [current_state.get_value(), 4],
+                color=MEDIUM_BLUE,
+                opacity=0.5,
+            )
         )
 
         area_text = always_redraw(
@@ -42,7 +47,9 @@ class IncreasingOptimization(Scene):
 
         def draw_opt_text():
             opt_bits = np.log2(1/current_area())
-            return Tex(r'$\Omega_{abs}(x) = ' + f'{opt_bits:.2f}$ bits of optimization').next_to(area_text, DOWN)
+            return Tex(
+                r'$\Omega_{abs}(x) = ' + f'{opt_bits:.2f}$ bits of optimization'
+            ).next_to(area_text, DOWN)
 
         opt_text = always_redraw(draw_opt_text)
 

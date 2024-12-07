@@ -1,0 +1,65 @@
+from manim import *
+import numpy as np
+
+config.pixel_height = 590
+config.background_color = '#ffeae3'
+Mobject.set_default(color=DARK_GRAY)
+
+class IncreasingOptimization(Scene):
+    def construct(self):
+        current_state = ValueTracker(0)
+
+        ax = Axes(
+            x_range=[0, 4],
+            y_range=[0, 0.8],
+            # x_axis_config={"numbers_to_include": [current_state]},
+        )
+
+        labels = ax.get_axis_labels(
+            y_label='p(x)',
+        )
+
+        x_axis_text = Tex(r'$\leftarrow$ States ordered according to $C \rightarrow$').next_to(ax, DOWN)
+
+
+        def lognormal(x, mu=0.0, sigma=1.0):
+            return np.exp(-(np.log(x) - mu)**2 / (2 * sigma**2)) / (x * sigma * np.sqrt(2 * np.pi))
+
+        lognormal_curve = ax.plot(lambda x: lognormal(x), x_range=[0.01, 4], color=BLUE_C)
+
+
+        # area_polygon = ax.get_area(lognormal_curve, [current_state.get_value(), 4], color=GREY, opacity=0.5)
+        area_polygon = VMobject()
+        area_polygon.add_updater(
+            lambda m: m.become(
+                ax.get_area(lognormal_curve, [current_state.get_value(), 4], color=GREY, opacity=0.5)
+            )
+        )
+
+        def calculate_area(start_value):
+            samples, dx = np.linspace(start_value, 20, retstep=True)
+            return np.trapz(lognormal(samples), dx=dx)
+
+
+        # area_text = Tex(f"$p_x = {area:.2f}$").shift(2*UP + 2*RIGHT)
+        area_text = Variable(current_state.get_value(), 'p_x', num_decimal_places=2).shift(2*UP + 2*RIGHT)
+        area_text.add_updater(
+            lambda m: m.tracker.set_value(calculate_area(current_state.get_value()))
+        )
+
+
+        opt_bits = np.log2(1/area)
+        opt_text = Tex('$\Omega_{abs}(x) = ' + f'{opt_bits:.2f}$ bits of optimization').next_to(area_text, DOWN)
+
+        self.add(
+            ax,
+            labels,
+            x_axis_text,
+            lognormal_curve,
+            area_polygon,
+            area_text,
+            opt_text,
+        )
+
+        self.play(current_state.animate.set_value(4), run_time=8, rate_func=linear)
+        self.wait(2)

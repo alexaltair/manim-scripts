@@ -1,17 +1,31 @@
-from manim import *
+import os, sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
+
 import numpy as np
+from manim import *
 
-from optimization_config import *
-
-config.pixel_height = 580
+import binary_string as bs
+import visual_config as vc
 
 class DifferentialEntropy(Scene):
     def construct(self):
+        vc.add_background_rectangle(self, config)
+
         x_range_end = 4.5
 
         ax = Axes(
+            x_length=10,
             x_range=[0, x_range_end],
             y_range=[0, 0.8],
+            x_axis_config={
+                "include_ticks": False,
+                "tip_width": vc.ARROW_TIP_WIDTH,
+                "tip_height": vc.ARROW_TIP_WIDTH,
+            },
+            y_axis_config={
+                "tip_width": vc.ARROW_TIP_WIDTH,
+                "tip_height": vc.ARROW_TIP_WIDTH,
+            },
         )
 
         # labels = ax.get_axis_labels(
@@ -34,14 +48,14 @@ class DifferentialEntropy(Scene):
         some_function_curve = ax.plot(
             some_function,
             x_range=[0, x_range_end],
-            color=DARK_BLUE
+            color=vc.PLOT_COLOR
         )
 
-        dist_label = Tex("$p(x)$", color=some_function_curve.color).shift(2*UP + 4*LEFT)
+        dist_label = Tex("$p(x)$", color=some_function_curve.color).shift(3*UP + 4*LEFT)
 
 
         x_star = 1.48
-        intersection_point = [x_star, 0.25, 0]
+        intersection_point = [x_star, 0, 0]
         intersection_line = Line(
             start=ax.c2p(*intersection_point),
             end=ax.c2p(x_star, -0.07, 0),
@@ -57,6 +71,7 @@ class DifferentialEntropy(Scene):
             intersection_line,
             intersection_label,
         )
+        self.wait()
 
 
         def accumulate_area(desired_area, area_start_point):
@@ -90,12 +105,31 @@ class DifferentialEntropy(Scene):
                     ax.input_to_graph_point(area_point, some_function_curve),
                     color=colors[n-1],
                     line_func=Line,
+                    stroke_width=3,
                 )
             )
 
-            a_n_label = Tex(f"$a_{n}$", color=colors[n-1]).shift(RIGHT + 3*UP + 0.5*n*DOWN)
-            bit_label = Tex(f"${compare_char} x* \Longrightarrow {bit_char}$").next_to(a_n_label)
+            bit_height = 0.5
+            bit_label = Tex(
+                f"${compare_char} x* \Longrightarrow$"
+            ).shift(2*RIGHT + 3.5*UP + bit_height*n*DOWN)
+            a_n_label = Tex(f"$a_{n}$", color=colors[n-1]).next_to(bit_label, LEFT)
 
-            self.add(*partition_lines, a_n_label, bit_label)
-            self.wait()
+            if n == 1:
+                binary_square = bs.BinaryStringEnd(
+                    value=bit_char,
+                    side_length=bit_height,
+                    radius=0.125,
+                    direction=bs.UP,
+                )
+            else:
+                binary_square = bs.BinaryStringBit(
+                    value=bit_char,
+                    side_length=bit_height,
+                )
+
+            binary_square.next_to(bit_label)
+
+            self.add(*partition_lines, a_n_label, bit_label, binary_square)
+            self.wait(1.2)
             self.remove(*partition_lines)
