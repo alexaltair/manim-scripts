@@ -6,6 +6,7 @@ from optimization_config import *
 
 config.pixel_height = 580
 
+
 class LimitOfProb(Scene):
     def construct(self):
         x_range_end = 4.5
@@ -19,27 +20,26 @@ class LimitOfProb(Scene):
         #     y_label='p(x)',
         # )
 
-
         def some_function(x):
             if x == 0:
                 return 0
             mu = 0.0
             sigma = 1.0
             # This is a base 10 log but it's just an arbitrary probability distribution
-            return np.exp(-(np.log(x) - mu)**2 / (2 * sigma**2)) / (x * sigma * np.sqrt(2 * np.pi))
+            return np.exp(-((np.log(x) - mu) ** 2) / (2 * sigma**2)) / (
+                x * sigma * np.sqrt(2 * np.pi)
+            )
 
             # return np.exp(-x)*np.sqrt(x)
             # return -5*x + 4
 
-
         some_function_curve = ax.plot(
-            some_function,
-            x_range=[0, x_range_end],
-            color=DARK_BLUE
+            some_function, x_range=[0, x_range_end], color=DARK_BLUE
         )
 
-        dist_label = Tex("$p(x)$", color=some_function_curve.color).shift(2*UP + 4*LEFT)
-
+        dist_label = Tex("$p(x)$", color=some_function_curve.color).shift(
+            2 * UP + 4 * LEFT
+        )
 
         self.add(
             ax,
@@ -47,20 +47,19 @@ class LimitOfProb(Scene):
             some_function_curve,
         )
 
-
         def area_fraction(i, n):
-            fraction = x_range_end/n
+            fraction = x_range_end / n
             area, _ = integrate.quad(
-                lambda x: some_function(x), i*fraction, (i+1)*fraction
+                lambda x: some_function(x), i * fraction, (i + 1) * fraction
             )
             return area
 
         for n in range(100):
             intersection_lines = []
             intersection_labels = []
-            for i in range(n): 
-                x_loc = (i + 0.5)*x_range_end/n
-                intersection_point = [x_loc, (n+1)*(0.22)*area_fraction(i, n), 0]
+            for i in range(n):
+                x_loc = (i + 0.5) * x_range_end / n
+                intersection_point = [x_loc, (n + 1) * (0.22) * area_fraction(i, n), 0]
                 intersection_line = Line(
                     start=ax.c2p(*intersection_point),
                     end=ax.c2p(x_loc, 0, 0),
@@ -74,12 +73,11 @@ class LimitOfProb(Scene):
                 *intersection_lines,
                 # *intersection_labels,
             )
-            self.wait(1/(n+1) + 0.1)
+            self.wait(1 / (n + 1) + 0.1)
             self.remove(
                 *intersection_lines,
                 # *intersection_labels,
             )
-
 
         # def accumulate_area(desired_area, area_start_point):
         #     dx = x_range_end/10000
@@ -104,7 +102,6 @@ class LimitOfProb(Scene):
         #         area_start_point = area_point
         #         compare_char = "<"
         #         bit_char = 0
-
 
         #     partition_lines.append(
         #         ax.get_vertical_line(

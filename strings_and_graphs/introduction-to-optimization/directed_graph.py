@@ -1,8 +1,10 @@
 from manim import *
+
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 
 import directed_graphs as dg
 from visual_config import add_background_rectangle
+
 
 class DirectedGraphs(Scene):
     def construct(self):
@@ -32,4 +34,3 @@ class DirectedGraphs(Scene):
         # graph on here
 
         dg.animate_graph(self, inner_circle)
-

@@ -2,9 +2,10 @@ import random
 
 from manim import *
 
-config.background_color = '#ffeae3'
+config.background_color = "#ffeae3"
 TEXT_COLOR = DARK_GRAY
-PHI = (1 + 5**0.5)/2
+PHI = (1 + 5**0.5) / 2
+
 
 class InitialBoxes(Scene):
     def create_initial_box_stuff(self, box, p1, p2, d1, d2, h1):
@@ -14,7 +15,7 @@ class InitialBoxes(Scene):
             include_ticks=False,
         )
         prob_line.shift([box.get_x(), -1, 0])
-        line1 = float(p1)*(prob_line.get_right() - prob_line.get_left())
+        line1 = float(p1) * (prob_line.get_right() - prob_line.get_left())
         mid = prob_line.get_left() + line1
 
         brace1 = BraceBetweenPoints(
@@ -31,7 +32,6 @@ class InitialBoxes(Scene):
         dollars1 = Tex(d1, color=TEXT_COLOR)
         dollars1.next_to(rect1, UP)
 
-
         brace2 = BraceBetweenPoints(
             mid,
             prob_line.get_right(),
@@ -42,7 +42,6 @@ class InitialBoxes(Scene):
 
         dollars2 = Tex(d2, color=TEXT_COLOR)
         dollars2.next_to(brace2, UP)
-
 
         self.play(
             Create(prob_line),
@@ -72,17 +71,13 @@ class InitialBoxes(Scene):
         self.play(Write(choice))
         # self.wait()
 
-
-
-        a_box = (
-            Rectangle(width=PHI, height=1, color=TEXT_COLOR)
-        )
-        a_box.shift(LEFT*3)
+        a_box = Rectangle(width=PHI, height=1, color=TEXT_COLOR)
+        a_box.shift(LEFT * 3)
         a_box_label = Tex("A", color=TEXT_COLOR)
         a_box_label.shift(a_box.get_center())
 
         b_box = Rectangle(width=PHI, height=1, color=TEXT_COLOR)
-        b_box.shift(RIGHT*3)
+        b_box.shift(RIGHT * 3)
         b_box_label = Tex("B", color=TEXT_COLOR)
         b_box_label.shift(b_box.get_center())
 
@@ -98,10 +93,9 @@ class InitialBoxes(Scene):
         b_box = Group(b_box, b_box_label)
 
         self.play(
-            a_box.animate.shift(DOWN*3),
-            b_box.animate.shift(DOWN*3),
+            a_box.animate.shift(DOWN * 3),
+            b_box.animate.shift(DOWN * 3),
         )
-
 
         (
             a_prob_line,
@@ -123,14 +117,11 @@ class InitialBoxes(Scene):
 
         # self.wait()
 
-
         self.play(Indicate(a_brace_txt1, color=None))
         self.play(Indicate(a_dollars1, color=None))
 
         self.play(Indicate(a_brace_txt2, color=None))
         self.play(Indicate(a_dollars2, color=None))
-
-
 
         # self.wait()
 
@@ -152,13 +143,11 @@ class InitialBoxes(Scene):
             h1=3,
         )
 
-
         self.play(Indicate(b_brace_txt1, color=None))
         self.play(Indicate(b_dollars1, color=None))
 
         self.play(Indicate(b_brace_txt2, color=None))
         self.play(Indicate(b_dollars2, color=None))
-
 
         self.play(FadeOut(choice))
 
@@ -179,16 +168,7 @@ class InitialBoxes(Scene):
             b_brace_txt1.animate.next_to(gt, RIGHT),
         )
 
-
-
-
-
-
-
-
-
         self.wait()
-
 
 
 def random_ev_params():
@@ -199,8 +179,8 @@ def random_ev_params():
     p2 = round(1 - p1, 2)
     assert p1 + p2 == 1
 
-    ev = d1*p1 + d2+p2
-    return Tex(fr"$\${d1} \cdot {p1} + \${d2} \cdot {p2}$", color=TEXT_COLOR)
+    ev = d1 * p1 + d2 + p2
+    return Tex(rf"$\${d1} \cdot {p1} + \${d2} \cdot {p2}$", color=TEXT_COLOR)
 
 
 class RandomBoxes(Scene):
@@ -211,10 +191,12 @@ class RandomBoxes(Scene):
             color=BLUE,
             fill_opacity=1,
         ).add(Tex("A", color=TEXT_COLOR))
-        a_box.shift(LEFT*3 + DOWN*2)
+        a_box.shift(LEFT * 3 + DOWN * 2)
 
-        b_box = Rectangle(width=PHI, height=1, color=TEXT_COLOR).add(Tex("B", color=TEXT_COLOR))
-        b_box.shift(RIGHT*3 + DOWN*2)
+        b_box = Rectangle(width=PHI, height=1, color=TEXT_COLOR).add(
+            Tex("B", color=TEXT_COLOR)
+        )
+        b_box.shift(RIGHT * 3 + DOWN * 2)
 
         self.play(
             Create(a_box),
@@ -230,17 +212,12 @@ class RandomBoxes(Scene):
         self.play(
             ScaleInPlace(a_rand_params, 4),
             MoveAlongPath(
-                a_rand_params,
-                Line(a_box.get_center(), a_box.get_center() + UP*3)
+                a_rand_params, Line(a_box.get_center(), a_box.get_center() + UP * 3)
             ),
             ScaleInPlace(b_rand_params, 4),
             MoveAlongPath(
-                b_rand_params,
-                Line(b_box.get_center(), b_box.get_center() + UP*3)
+                b_rand_params, Line(b_box.get_center(), b_box.get_center() + UP * 3)
             ),
         )
-
-
-
 
         self.wait()
