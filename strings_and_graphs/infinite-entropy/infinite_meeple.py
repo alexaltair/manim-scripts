@@ -1,5 +1,6 @@
 from manim import *
 import random
+
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 from visual_config import add_background_rectangle
 import visual_config as vg
@@ -24,12 +25,7 @@ ELLIPSIS_SIZE_MULTIPLIER = 0.6
 
 DOUBLINGS = 6
 
-QUESTIONS = ["Glasses?",
-             "Red shirt?",
-             "Short hair?",
-             "Light hair?",
-             "Hat?",
-             ""]
+QUESTIONS = ["Glasses?", "Red shirt?", "Short hair?", "Light hair?", "Hat?", ""]
 label_list = []
 
 initial_frame_width = 0
@@ -37,6 +33,7 @@ initial_word_zone_width = 0
 max_meeple_width = 0
 
 bit_list_2d = [[] for _ in range(DOUBLINGS)]
+
 
 # Given n, generate the binary strings for the first 2^n meeple that
 # should be displayed.
@@ -46,7 +43,7 @@ def get_meeple_in_power(n, m=DOUBLINGS):
     if n < 1:
         return ["0" * m]
     binary_strings = []
-    mip = get_meeple_in_power(n - 1, m - 1) 
+    mip = get_meeple_in_power(n - 1, m - 1)
     for binary_string in mip:
         binary_strings.append("0" + binary_string)
     for binary_string in mip:
@@ -64,13 +61,10 @@ def create_binary_mobjects(binary):
         else:
             value = False
         if i == 0:
-            bit_list.append(bs.BinaryStringEnd(value=value, 
-                                               direction=bs.UP))
+            bit_list.append(bs.BinaryStringEnd(value=value, direction=bs.UP))
         elif i == len(binary) - 1:
             dot = Dot(color=vg.STROKE_COLOR)
-            ellipsis = VGroup(dot, 
-                              Mobject.copy(dot), 
-                              Mobject.copy(dot))
+            ellipsis = VGroup(dot, Mobject.copy(dot), Mobject.copy(dot))
             ellipsis.arrange_submobjects()
             ellipsis.rotate_about_origin(90 * DEGREES)
             bit_list.append(ellipsis)
@@ -79,7 +73,7 @@ def create_binary_mobjects(binary):
             bit_list.append(bs.BinaryStringBit(value=value))
         bit_list[i].scale_to_fit_height(max_binary_string_width * size_multiplier)
         bit_list[i].set_opacity(0)
-        bit_list_2d[i].append(bit_list[i]) 
+        bit_list_2d[i].append(bit_list[i])
     return bit_list
 
 
@@ -96,7 +90,7 @@ def get_coords_by_stage(meeple, meeple_list, n, frame_width):
     # Do the equivalent of align_to_border(UP, buff=MARGIN)
     y = config.frame_height / 2 - MARGIN * 2 - m_height / 2
     meeple_coords = [x, y, 0]
-   
+
     b_width = ratio * max_binary_string_width
     buffer = ratio * MAX_BUFFER
     bit_coords = []
@@ -111,13 +105,13 @@ def get_coords_by_stage(meeple, meeple_list, n, frame_width):
 
 def get_label_coords_by_stage(n, frame_width):
     ratio = get_ratio_by_stage(n, frame_width)
-    
+
     m_width = ratio * max_meeple_width
     m_height = m_width / PNG_WIDTH * PNG_HEIGHT
 
     # Do the equivalent of align_to_border(UP, buff=MARGIN)
     meeple_y = config.frame_height / 2 - MARGIN * 2 - m_height / 2
-  
+
     b_width = ratio * max_binary_string_width
     buffer = ratio * MAX_BUFFER
     start_label_y = meeple_y - m_width / 2 - buffer - b_width / 2
@@ -167,11 +161,11 @@ def get_bit_size_by_stage(n, frame_width):
 def create_meeple_mobject(binary):
     decimal = int(binary[::-1], 2) + 1
     if decimal <= REAL_MEEPLE:
-        return ImageMobject("assets/meeple-margins/m-{:02d}.png"
-                .format(decimal))
+        return ImageMobject("assets/meeple-margins/m-{:02d}.png".format(decimal))
     else:
-        return ImageMobject("assets/meeple-margins/m-{:02d}.png".format(
-            random.randint(1, REAL_MEEPLE)))
+        return ImageMobject(
+            "assets/meeple-margins/m-{:02d}.png".format(random.randint(1, REAL_MEEPLE))
+        )
 
 
 def create_meeple_mobject_dict(meeple_list):
@@ -192,17 +186,23 @@ def move_old_labels(n, frame_width):
     if frame_width < MAX_FRAME_WIDTH:
         # Move to a new location and scale down
         for i, label in enumerate(label_list[:DOUBLINGS]):
-            move_anims.append(label.animate
-                    .set(width=label_widths[i])
-                    .move_to(label_coords[i], coor_mask=[0, 1, 0])
-                    .align_on_border(LEFT, buff=MARGIN))
+            move_anims.append(
+                label.animate.set(width=label_widths[i])
+                .move_to(label_coords[i], coor_mask=[0, 1, 0])
+                .align_on_border(LEFT, buff=MARGIN)
+            )
     else:
         # Move offscreen and scale down
-        x_coord_barely_offscreen = -1 * (config.frame_width / 2 + initial_word_zone_width)
+        x_coord_barely_offscreen = -1 * (
+            config.frame_width / 2 + initial_word_zone_width
+        )
         for i, label in enumerate(label_list[:DOUBLINGS]):
-            move_anims.append(label.animate
-                    .set(width=label_widths[i])
-                    .move_to([x_coord_barely_offscreen, label_coords[i][1], 0], coor_mask=[1, 1, 0]))
+            move_anims.append(
+                label.animate.set(width=label_widths[i]).move_to(
+                    [x_coord_barely_offscreen, label_coords[i][1], 0],
+                    coor_mask=[1, 1, 0],
+                )
+            )
 
     return move_anims
 
@@ -216,19 +216,21 @@ def move_old_meeple_and_bits(meeple_dict, meeple_list, n, frame_width):
     # Move and scale meeple and bits
     for m in meeple_dict.keys():
         meeple_coords, bit_coords = get_coords_by_stage(m, meeple_list, n, frame_width)
-        
-        move_anims.append(meeple_dict[m][0].animate
-                .scale_to_fit_width(m_width)
-                .move_to(meeple_coords))
+
+        move_anims.append(
+            meeple_dict[m][0].animate.scale_to_fit_width(m_width).move_to(meeple_coords)
+        )
 
         for i, bit in enumerate(meeple_dict[m][1]):
             size_multiplier = 1
-            if i == DOUBLINGS - 1: size_multiplier = ELLIPSIS_SIZE_MULTIPLIER
+            if i == DOUBLINGS - 1:
+                size_multiplier = ELLIPSIS_SIZE_MULTIPLIER
 
-            move_anims.append(bit.animate
-                    .scale_to_fit_height(b_width * size_multiplier)
-                    .set(stroke_width=stroke_width)
-                    .move_to(bit_coords[i]))
+            move_anims.append(
+                bit.animate.scale_to_fit_height(b_width * size_multiplier)
+                .set(stroke_width=stroke_width)
+                .move_to(bit_coords[i])
+            )
 
     return move_anims
 
@@ -254,7 +256,9 @@ def expand_x_axis(x_axis, n, frame_width):
 
 def move_old(meeple_dict, meeple_list, n, frame_width, x_axis):
     move_anims = []
-    move_anims.extend(move_old_meeple_and_bits(meeple_dict, meeple_list, n, frame_width))
+    move_anims.extend(
+        move_old_meeple_and_bits(meeple_dict, meeple_list, n, frame_width)
+    )
     move_anims.extend(move_old_labels(n, frame_width))
     move_anims.append(expand_x_axis(x_axis, n, frame_width))
     return move_anims
@@ -275,7 +279,12 @@ def define_initial_dimensions():
     word_zone_width = 0
     for question in QUESTIONS:
         with register_font("SourceSerifPro-Regular.ttf"):
-            label = Text(question, font_size=MAX_FONT_SIZE, font="Source Serif Pro", should_center=False).set_opacity(0)
+            label = Text(
+                question,
+                font_size=MAX_FONT_SIZE,
+                font="Source Serif Pro",
+                should_center=False,
+            ).set_opacity(0)
         label_list.append(label)
         word_zone_width = max(label.width, word_zone_width)
 
@@ -315,7 +324,7 @@ def add_label(self, n, frame_width):
         # Add label at the right y position and size
         label_list[n].set_opacity(0)
         self.add(label_list[n])
-    
+
 
 def add_meeple_stage(self, n, meeple_dict, frame_width):
     meeple_list = get_meeple_in_power(n)
@@ -336,11 +345,12 @@ def add_meeple_stage(self, n, meeple_dict, frame_width):
             new_md[m][0].set_opacity(0)
         new_md[m][0].scale_to_fit_width(m_width)
         self.add(new_md[m][0])
-        
+
         # Place and scale new individual meeple's bits
         for i, bit in enumerate(new_md[m][1]):
             size_multiplier = 1
-            if i == DOUBLINGS - 1: size_multiplier = ELLIPSIS_SIZE_MULTIPLIER
+            if i == DOUBLINGS - 1:
+                size_multiplier = ELLIPSIS_SIZE_MULTIPLIER
 
             bit.move_to(bit_coords[i])
             bit.scale_to_fit_height(b_width * size_multiplier)
@@ -359,10 +369,7 @@ def add_all_meeple_stages(self):
     for n in range(1, 1 + DOUBLINGS):
         frame_width = update_frame_width(n, frame_width)
         add_label(self, n, frame_width)
-        new_md, meeple_list = add_meeple_stage(self, 
-                                               n, 
-                                               meeple_dict,
-                                               frame_width)
+        new_md, meeple_list = add_meeple_stage(self, n, meeple_dict, frame_width)
         self.play(*move_old(meeple_dict, meeple_list, n, frame_width, x_axis))
         self.play(*fade_in_new(new_md, n))
 
@@ -374,4 +381,3 @@ class InfiniteMeeple(Scene):
         add_background_rectangle(self, config)
         add_all_meeple_stages(self)
         self.wait()
-

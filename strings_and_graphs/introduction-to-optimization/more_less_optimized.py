@@ -2,6 +2,7 @@ import random
 from string import ascii_uppercase
 
 from manim import *
+
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 
 import directed_graphs as dg
@@ -22,7 +23,7 @@ def add_less_than_sign(self, dot1, dot2):
     x_coord = (dot1.get_center()[0] + dot2.get_center()[0]) / 2
     y_coord = dot1.get_center()[1]
     point = Point(location=[x_coord, y_coord, 0])
-    self.add(Text('<').move_to(point).scale(dot1.radius * 2))
+    self.add(Text("<").move_to(point).scale(dot1.radius * 2))
 
 
 def create_labeled_dots_lineup(self, num_states, radius):
@@ -33,15 +34,18 @@ def create_labeled_dots_lineup(self, num_states, radius):
 
     for i in range(len(labels)):
         label = labels[i]
-        effective_screen_width = config.frame_width - \
-                (MARGIN + radius) * 2
-        x_coord = effective_screen_width / (len(labels) - 1) * (i) - (effective_screen_width / 2)
+        effective_screen_width = config.frame_width - (MARGIN + radius) * 2
+        x_coord = effective_screen_width / (len(labels) - 1) * (i) - (
+            effective_screen_width / 2
+        )
 
-        dot = Dot(point=[x_coord, 0, 0],
-                radius=radius, 
-                stroke_width=dg.VERTEX_STROKE_WIDTH,
-                color=dg.STROKE_COLOR,
-                fill_color=dg.FILL_COLOR)
+        dot = Dot(
+            point=[x_coord, 0, 0],
+            radius=radius,
+            stroke_width=dg.VERTEX_STROKE_WIDTH,
+            color=dg.STROKE_COLOR,
+            fill_color=dg.FILL_COLOR,
+        )
 
         dots[label] = dot
         dot.align_on_border(DOWN, buff=MARGIN)
@@ -64,32 +68,30 @@ def animate_graph_and_lineup(self, graph, dots):
     for i in range(len(graph.edges)):
         vertex = graph.vertices[i]
 
-        self.play(Indicate(
-            vertex,
-            color=dg.INDICATE_COLOR,
-            scale_factor=dg.INDICATE_SCALE),
+        self.play(
+            Indicate(vertex, color=dg.INDICATE_COLOR, scale_factor=dg.INDICATE_SCALE),
             Indicate(
                 dots[ascii_uppercase[i]],
                 color=dg.INDICATE_COLOR,
-                scale_factor=dg.INDICATE_SCALE))
+                scale_factor=dg.INDICATE_SCALE,
+            ),
+        )
 
         if i + 1 < len(graph.edges):
             edge = graph.edges[(i, i + 1)]
         else:
             edge = graph.edges[(i, 0)]
 
-        self.play(Indicate(
-            edge,
-            color=dg.INDICATE_COLOR,
-            scale_factor=dg.INDICATE_SCALE))
+        self.play(
+            Indicate(edge, color=dg.INDICATE_COLOR, scale_factor=dg.INDICATE_SCALE)
+        )
 
 
 class MoreLessOptimized(Scene):
     def construct(self):
         add_background_rectangle(self, config)
 
-        state_graph = dg.create_directed_graph(NUM_STATES, 
-                vertex_radius = DOT_RADIUS)
+        state_graph = dg.create_directed_graph(NUM_STATES, vertex_radius=DOT_RADIUS)
         state_graph.align_on_border(UP, buff=MARGIN)
         self.add(state_graph)
         label_graph(self, state_graph)
@@ -97,17 +99,16 @@ class MoreLessOptimized(Scene):
 
         dots = create_labeled_dots_lineup(self, NUM_STATES, DOT_RADIUS)
 
-        less_optimized_label = Text("Less optimized") \
-                .shift(2.5 * DOWN) \
-                .scale(2 * DOT_RADIUS)
+        less_optimized_label = (
+            Text("Less optimized").shift(2.5 * DOWN).scale(2 * DOT_RADIUS)
+        )
         less_optimized_label.align_on_border(LEFT, buff=MARGIN)
         self.add(less_optimized_label)
 
-        more_optimized_label = Text("More optimized") \
-                .shift(2.5 * DOWN) \
-                .scale(2 * DOT_RADIUS)
+        more_optimized_label = (
+            Text("More optimized").shift(2.5 * DOWN).scale(2 * DOT_RADIUS)
+        )
         more_optimized_label.align_on_border(RIGHT, buff=MARGIN)
         self.add(more_optimized_label)
 
         animate_graph_and_lineup(self, state_graph, dots)
-

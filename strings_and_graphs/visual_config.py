@@ -29,19 +29,20 @@ Mobject.set_default(color=STROKE_COLOR)
 
 ARROW_TIP_WIDTH = 0.25
 
+
 def add_background_rectangle(self, config):
     background_color = "#dce2e1"
     bg_radius_in_pixels = 125
     # Manim clips things by about this much when border-aligned
     unclip = 0.015
-    radius = bg_radius_in_pixels / \
-            config.pixel_width * config.frame_width
+    radius = bg_radius_in_pixels / config.pixel_width * config.frame_width
 
     tlc = Circle(
-            color=background_color,
-            fill_color=background_color,
-            fill_opacity=1,
-            radius=radius)
+        color=background_color,
+        fill_color=background_color,
+        fill_opacity=1,
+        radius=radius,
+    )
     tlc.align_on_border(UP, buff=unclip)
     tlc.align_on_border(LEFT, buff=unclip)
 
@@ -55,18 +56,20 @@ def add_background_rectangle(self, config):
     brc.align_on_border(DOWN, buff=unclip)
 
     tall_r = Rectangle(
-            color=background_color,
-            fill_color=background_color,
-            fill_opacity=1,
-            width=config.frame_width - radius * 2,
-            height=config.frame_height)
+        color=background_color,
+        fill_color=background_color,
+        fill_opacity=1,
+        width=config.frame_width - radius * 2,
+        height=config.frame_height,
+    )
 
     wide_r = Rectangle(
-            color=background_color,
-            fill_color=background_color,
-            fill_opacity=1,
-            width=config.frame_width,
-            height=config.frame_height - radius * 2)
+        color=background_color,
+        fill_color=background_color,
+        fill_opacity=1,
+        width=config.frame_width,
+        height=config.frame_height - radius * 2,
+    )
 
     self.add(tall_r)
     self.add(wide_r)

@@ -3,6 +3,7 @@ import numpy as np
 
 from optimization_config import *
 
+
 class DenseDifferentialEntropy(Scene):
     def construct(self):
         x_range_end = 5
@@ -16,8 +17,8 @@ class DenseDifferentialEntropy(Scene):
         #     y_label='p(x)',
         # )
 
-        dist_label = Tex("$p(x)$", color=BLUE_C).shift(2*UP + 4*LEFT)
-        entro_label = Tex(r"$\log \frac{1}{p(x)}$", color=RED_C).shift(4*RIGHT)
+        dist_label = Tex("$p(x)$", color=BLUE_C).shift(2 * UP + 4 * LEFT)
+        entro_label = Tex(r"$\log \frac{1}{p(x)}$", color=RED_C).shift(4 * RIGHT)
 
         def some_function(x):
             # return 1
@@ -26,22 +27,15 @@ class DenseDifferentialEntropy(Scene):
             # return 1.2 - 0.2*x
 
         some_function_curve = ax.plot(
-            some_function,
-            x_range=[0, x_range_end],
-            color=BLUE_C
+            some_function, x_range=[0, x_range_end], color=BLUE_C
         )
 
         scale = 0.15
         diff_entro = ax.plot(
-            lambda x: scale*np.log2(1/some_function(x)),
+            lambda x: scale * np.log2(1 / some_function(x)),
             x_range=[0, x_range_end],
-            color=RED_C
+            color=RED_C,
         )
-
-
-
-
-
 
         intersection_x = 1.48
         intersection_point = [intersection_x, 0.25, 0]
@@ -49,13 +43,9 @@ class DenseDifferentialEntropy(Scene):
             start=ax.c2p(*intersection_point),
             end=ax.c2p(intersection_x, -0.07, 0),
         )
-        intersection_label = Tex(f'$x = {intersection_x}$', font_size=x_axis_font_size).next_to(intersection_line, 1*DOWN)
-
-
-
-
-
-
+        intersection_label = Tex(
+            f"$x = {intersection_x}$", font_size=x_axis_font_size
+        ).next_to(intersection_line, 1 * DOWN)
 
         self.add(
             ax,
@@ -67,15 +57,16 @@ class DenseDifferentialEntropy(Scene):
             intersection_label,
         )
 
-
         def equal_area_partitions(n):
-            dx = x_range_end/10000
+            dx = x_range_end / 10000
             line_positions = [0]
             sample = 0
             area = 0
             for i in range(n):
-                while area <= (i+1)/n and sample+dx < x_range_end:
-                    area += (dx/2)*(some_function(sample) + some_function(sample+dx))
+                while area <= (i + 1) / n and sample + dx < x_range_end:
+                    area += (dx / 2) * (
+                        some_function(sample) + some_function(sample + dx)
+                    )
                     sample += dx
 
                 line_positions.append(sample)
@@ -98,8 +89,8 @@ class DenseDifferentialEntropy(Scene):
         for i in range(7):
             n = 2**i
             partitions = equal_area_partitions(n)
-            n_label = Tex(f"$n = {n}$").shift(3*UP)
+            n_label = Tex(f"$n = {n}$").shift(3 * UP)
 
-            self.add(n_label,partitions)
+            self.add(n_label, partitions)
             self.wait()
-            self.remove(n_label,partitions)
+            self.remove(n_label, partitions)
