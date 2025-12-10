@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 800 700">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        stroke-width: 0px;
+      }
+
+      .cls-1, .cls-3, .cls-4 {
+        fill: #569eb7;
+      }
+
+      .cls-1, .cls-4 {
+        opacity: .2;
+      }
+
+      .cls-5 {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .cls-5, .cls-3, .cls-4, .cls-6 {
+        stroke: #000;
+        stroke-width: 2px;
+      }
+
+      .cls-5, .cls-6 {
+        fill: #e6e6e6;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-3, .cls-4, .cls-6 {
+        stroke-miterlimit: 10;
+      }
+    </style>
+  </defs>
+  <rect class="cls-3" x="380.2" y="374.3" width="39.5" height="222.5"/>
+  <rect class="cls-5" x="377.9" y="348.6" width="44.2" height="38"/>
+  <rect class="cls-5" x="377.9" y="386.6" width="44.2" height="7"/>
+  <path class="cls-5" d="M392.6,591.1h14.8c7.2,0,13.1,5.9,13.1,13.1v10.8h-40.9v-10.8c0-7.2,5.9-13.1,13.1-13.1Z" transform="translate(800 1206) rotate(180)"/>
+  <rect class="cls-5" x="379.5" y="584.6" width="40.9" height="6.5" transform="translate(800 1175.6) rotate(180)"/>
+  <g>
+    <line class="cls-5" x1="385.3" y1="350.7" x2="385.3" y2="381.2"/>
+    <line class="cls-5" x1="400" y1="350.7" x2="400" y2="381.2"/>
+    <line class="cls-5" x1="414.7" y1="350.7" x2="414.7" y2="381.2"/>
+  </g>
+  <g>
+    <path class="cls-5" d="M384,595.4c0,5.1,0,10.2,0,15.3"/>
+    <path class="cls-5" d="M400,595.4c0,6.2,0,12.3,0,18.5"/>
+    <path class="cls-5" d="M416,595.4v14.5"/>
+  </g>
+  <path class="cls-6" d="M400,128.7c-62.3,0-112.8,50.5-112.8,112.8s50.5,112.8,112.8,112.8,112.8-50.5,112.8-112.8-50.5-112.8-112.8-112.8ZM400,335.3c-51.8,0-93.8-42-93.8-93.8s42-93.8,93.8-93.8,93.8,42,93.8,93.8-42,93.8-93.8,93.8Z"/>
+  <circle class="cls-4" cx="400" cy="241.6" r="93.8"/>
+  <path class="cls-1" d="M400,147.8c-51.8,0-93.8,42-93.8,93.8s42,93.8,93.8,93.8,93.8-42,93.8-93.8-42-93.8-93.8-93.8ZM402.4,329.8c-48.4,0-87.7-38.4-87.7-85.7s39.2-85.7,87.7-85.7,87.7,38.4,87.7,85.7-39.2,85.7-87.7,85.7Z"/>
+  <circle class="cls-2" cx="357.4" cy="179.5" r="13.3"/>
+</svg>
