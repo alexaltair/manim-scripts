@@ -1,0 +1,16 @@
+{
+  "image": "manimcommunity/manim",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"analytic-signal.preview-mp4"
+			]
+		}
+	},
+
+	"features": {
+		"git": "latest"
+	}
+}
